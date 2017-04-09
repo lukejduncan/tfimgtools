@@ -71,7 +71,7 @@ Vagrant.configure(2) do |config|
      sudo apt-get install -y python3-pip
     
      pip3 install --upgrade pip
-     sudo pip3 install tensorflow jupyter
+     sudo pip3 install tensorflow jupyter matplotlib
 
      jupyter notebook --notebook-dir=/vagrant/notebook --no-browser --ip=0.0.0.0 & 
    SHELL
