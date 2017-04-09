@@ -1,3 +1,0 @@
-* To get vagrant to work, I needed to update virtualbox to 5.1, and vagrant to 1.9.  Otherwise, it would hang on vagrant 9.  Otherwise, it would hang on vagrant up
-
-* data directory is not checked in
