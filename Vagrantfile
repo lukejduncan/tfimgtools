@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/xenial64"
+  config.ssh.forward_x11 = true
   #config.vm.box = "ubuntu/trusty64"
   #config.vm.box = "hashicorp/precise64"
 
@@ -68,10 +69,10 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
      sudo apt-get update
-     sudo apt-get install -y python3-pip
+     sudo apt-get install -y python3-pip python3-tk
     
      pip3 install --upgrade pip
-     sudo pip3 install tensorflow jupyter matplotlib
+     sudo pip3 install tensorflow jupyter matplotlib sklearn scipy
 
      jupyter notebook --notebook-dir=/vagrant/notebook --no-browser --ip=0.0.0.0 & 
    SHELL
