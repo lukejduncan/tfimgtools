@@ -74,6 +74,6 @@ Vagrant.configure(2) do |config|
      pip3 install --upgrade pip
      sudo pip3 install tensorflow jupyter matplotlib sklearn scipy
 
-     jupyter notebook --notebook-dir=/vagrant/notebook --no-browser --ip=0.0.0.0 & 
+     alias startjupyter="jupyter notebook --notebook-dir=/vagrant/notebook --no-browser --ip=0.0.0.0" 
    SHELL
 end
