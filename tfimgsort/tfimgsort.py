@@ -3,6 +3,7 @@ import sys
 import argparse
 import numpy as np
 import tensorflow as tf
+import ntpath
 from functools import reduce
 
 parser = argparse.ArgumentParser(description='Classifies images using a tensorflow based classifier')
@@ -78,17 +79,20 @@ def setup_dirs(labels, directory):
     os.makedirs(d)
 
 ## TODO decide these based on PR Curve, make configurable
-def singleclass(img, predictions, target, labels):
+def singleclass(img, predictions, target, labels, directory):
   global confidence_dirs
   global confidence_intervals
 
   idx = labels.index(target)
   prob = predictions[idx]
 
+  expanded_dirs = [os.path.join(directory, d) for d in confidence_dirs]
+  base = ntpath.basename(img)
+
   ## Assumes decreasing order
   for i in range(len(confidence_intervals)):
     if prob > confidence_intervals[i]:
-      print(confidence_dirs[i])
+      os.rename(img, os.path.join(expanded_dirs[i], base))
       break
 
 def stringify(nplist):
@@ -123,7 +127,7 @@ for img in imgs:
     csv(csv_file, predictions)
 
   if args.singleclass:
-    singleclass(img, predictions, args.singleclass, labels)
+    singleclass(img, predictions, args.singleclass, labels, OUTPUT_DIR)
   elif args.multiclass:
     print((predictions, labels))
 
