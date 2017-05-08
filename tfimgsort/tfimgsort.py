@@ -6,18 +6,18 @@ import tensorflow as tf
 import ntpath
 from functools import reduce
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 parser = argparse.ArgumentParser(description='Classifies images using a tensorflow based classifier')
 
-# TODO:
-# - Sort per animal
-# - Sort all animals
+# TODO handle damaged images
 
 ### CLI Interface
 parser.add_argument("unsorted", type=str)
 parser.add_argument("--model-dir", help="The directory that contains the model you want to use.  Defaults to `model`", type=str)
 parser.add_argument("--csv", help="When classifying the images writes the results to a given csv file", type=str)
 parser.add_argument("--singleclass", help="This is the default Sorting Scheme. Performs binary classification on the images as the specified class. The results are tiered into folders based on confidence of result. You must choose multiclass or singleclass but not both.", type=str)
-parser.add_argument("--multiclass", help="Performs multiclass classification, sorting the input directory into the most likely class. You must choose multiclass or singleclass but not both.")
+parser.add_argument("--multiclass", help="Performs multiclass classification, sorting the input directory into the most likely class. You must choose multiclass or singleclass but not both.", action='store_true')
 parser.add_argument("--output-dir", help="The directory to output single or multiclass sorting. Defaults to 'classifications'", type=str)
 
 args = parser.parse_args()
@@ -25,6 +25,7 @@ args = parser.parse_args()
 MODEL_FILE = os.path.join(args.model_dir, 'output_graph.pb')
 LABELS_FILE = os.path.join(args.model_dir, 'output_labels.txt')
 OUTPUT_DIR = args.output_dir if args.output_dir else 'classifications'
+ERROR_DIR = 'error'
 
 confidence_intervals = [0.9, 0.7, 0.5, 0.0]
 confidence_dirs = ['high confidence', 'confident', 'low confidence', 'negative']
@@ -61,8 +62,17 @@ def classify(img):
 def ls(img_dir):
   return [os.path.join(img_dir, img) for img in os.listdir(img_dir)]
 
-def multiclass(context):
-  return -1
+def mv(from_file, to_dir):
+  base = ntpath.basename(from_file)
+  os.rename(from_file, os.path.join(to_dir, base))
+
+def multiclass(img, predictions, labels, directory):
+  # Take precitions
+  # Move image to top scoring label
+  idx = np.argmax(predictions)
+  animal = labels[idx]
+  animal_dir = os.path.join(directory, animal)
+  mv(img, animal_dir)
 
 def setup_dirs(labels, directory):
   if not os.path.isdir(directory):
@@ -87,12 +97,11 @@ def singleclass(img, predictions, target, labels, directory):
   prob = predictions[idx]
 
   expanded_dirs = [os.path.join(directory, d) for d in confidence_dirs]
-  base = ntpath.basename(img)
 
   ## Assumes decreasing order
   for i in range(len(confidence_intervals)):
     if prob > confidence_intervals[i]:
-      os.rename(img, os.path.join(expanded_dirs[i], base))
+      mv(img, expanded_dirs[i])
       break
 
 def stringify(nplist):
@@ -115,13 +124,19 @@ if args.csv:
   csv_file.write(stringify(labels))
 
 if args.singleclass:
-  setup_dirs(confidence_dirs, OUTPUT_DIR)
+  setup_dirs(confidence_dirs + [ERROR_DIR], OUTPUT_DIR)
 
 if args.multiclass:
-  setup_dirs(labels, OUTPUT_DIR)
+  setup_dirs(labels + [ERROR_DIR], OUTPUT_DIR)
 
 for img in imgs:
-  predictions = classify(img)
+  try:
+    predictions = classify(img)
+  except:
+    error_path = os.path.join(OUTPUT_DIR, ERROR_DIR)
+    mv(img, error_path)
+    print("There was a problem classifying %s.  It has been moved to the directory %s" % (img, error_path))
+    continue
 
   if args.csv:
     csv(csv_file, predictions)
@@ -129,7 +144,7 @@ for img in imgs:
   if args.singleclass:
     singleclass(img, predictions, args.singleclass, labels, OUTPUT_DIR)
   elif args.multiclass:
-    print((predictions, labels))
+    multiclass(img, predictions, labels, OUTPUT_DIR)
 
 if args.csv:
   csv_file.close()
