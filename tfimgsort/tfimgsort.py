@@ -35,6 +35,35 @@ if args.singleclass and args.multiclass:
   sys.exit(1)
 
 ### AUX Methods
+def stringify(nplist):
+  string = reduce((lambda x, y: str(x) + ',' + str(y)), nplist)
+  string += '\n'
+  return string
+
+def csv(csv_file, predictions):
+  csv_file.write(stringify(predictions))
+
+def ls(img_dir):
+  return [os.path.join(img_dir, img) for img in os.listdir(img_dir)]
+
+def mv(from_file, to_dir):
+  base = ntpath.basename(from_file)
+  os.rename(from_file, os.path.join(to_dir, base))
+
+def setup_dirs(labels, directory):
+  if not os.path.isdir(directory):
+    os.makedirs(directory)
+
+  if os.path.isdir(directory):
+    if len(os.listdir(directory)):
+      print("ERROR: %s needs to be an empty directory." % (directory))
+      sys.exit(1)
+
+  sub_dirs = list(map((lambda x: os.path.join(directory, x)), labels))
+
+  for d in sub_dirs:
+    os.makedirs(d)
+
 def create_graph(file):
   with tf.gfile.FastGFile(file, 'rb') as f:
       graph_def = tf.GraphDef()
@@ -59,13 +88,6 @@ def classify(img):
 
   return predictions
 
-def ls(img_dir):
-  return [os.path.join(img_dir, img) for img in os.listdir(img_dir)]
-
-def mv(from_file, to_dir):
-  base = ntpath.basename(from_file)
-  os.rename(from_file, os.path.join(to_dir, base))
-
 def multiclass(img, predictions, labels, directory):
   # Take precitions
   # Move image to top scoring label
@@ -74,19 +96,6 @@ def multiclass(img, predictions, labels, directory):
   animal_dir = os.path.join(directory, animal)
   mv(img, animal_dir)
 
-def setup_dirs(labels, directory):
-  if not os.path.isdir(directory):
-    os.makedirs(directory)
-
-  if os.path.isdir(directory):
-    if len(os.listdir(directory)):
-      print("ERROR: %s needs to be an empty directory." % (directory))
-      sys.exit(1)
-
-  sub_dirs = list(map((lambda x: os.path.join(directory, x)), labels))
-
-  for d in sub_dirs:
-    os.makedirs(d)
 
 ## TODO decide these based on PR Curve, make configurable
 def singleclass(img, predictions, target, labels, directory):
@@ -103,14 +112,6 @@ def singleclass(img, predictions, target, labels, directory):
     if prob > confidence_intervals[i]:
       mv(img, expanded_dirs[i])
       break
-
-def stringify(nplist):
-  string = reduce((lambda x, y: str(x) + ',' + str(y)), nplist)
-  string += '\n'
-  return string
-
-def csv(csv_file, predictions):
-  csv_file.write(stringify(predictions))
 
 ### Driver
 create_graph(MODEL_FILE)
