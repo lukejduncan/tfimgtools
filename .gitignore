@@ -1,5 +1,6 @@
 .vagrant
 build
 data
+**/*.swp
 **/__pycache__
 **/.ipynb_checkpoints
