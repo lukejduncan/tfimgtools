@@ -1,4 +1,0 @@
-none
-tapir
-elephant
-rhino
