@@ -130,7 +130,7 @@ def main():
   output_dir = args.output_dir if args.output_dir else 'classifications'
 
   if args.singleclass and args.multiclass:
-    print("Please use singleclass or multiclass, but not both.  See --help for details on available options.")
+    logger.critical("Please use singleclass or multiclass, but not both.  See --help for details on available options.")
     sys.exit(1)
 
   if args.verbose:
