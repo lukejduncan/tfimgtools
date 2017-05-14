@@ -1,6 +1,7 @@
 .vagrant
 build
 data
+*.egg-info
 **/*.pyc
 **/*.swp
 **/__pycache__

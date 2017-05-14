@@ -3,14 +3,9 @@
 import re
 from setuptools import setup
 
-version = "0.0.1"
+version = "0.0.5"
 reqs = ['tensorflow']
 
-with open("README.md", "rb") as f:
-    long_descr = f.read().decode("utf-8")
-
-# TODO replace url
-# TODO pick a reasonable license
 setup(
     name = "tfimgtools",
     packages = ["tfimgsort"],
@@ -19,7 +14,7 @@ setup(
         },
     version = version,
     description = "A tool for sorting images given a tensorflow model.",
-    long_description = long_descr,
+    long_description = "A tool for sorting images given a tensorflow model.",
     classifiers = [
       'License :: OSI Approved :: MIT License',
       'Development Status :: 1 - Planning',

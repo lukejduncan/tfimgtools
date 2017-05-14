@@ -4,6 +4,10 @@ tfimgtools is a set of CLI tools for using and evaluating image classifier model
 
 # Installation
 
+## Versioning
+This project uses [semantic versioning](http://www.semver.org).  Any version < 1.0.0 are considered
+development versions and are subject to backwards incompatible changes.
+
 ## Vagrant (recommended for development)
 Primary development is done using Vagrant for environment isolation.
 
@@ -17,7 +21,9 @@ vagrant ssh
 
 ## pip (recommended for end-users)
 
-COMING SOON
+```shell
+pip3 install tfimgtools
+```
 
 ## venv
 
