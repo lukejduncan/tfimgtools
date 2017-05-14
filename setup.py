@@ -34,5 +34,5 @@ setup(
     install_requires=reqs,
     author = "Luke Duncan",
     author_email = "lduncan@gmail.com",
-    url = "http://www.example.com",
+    url = "https://github.com/lukejduncan/tfimgtools",
     )
