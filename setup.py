@@ -29,7 +29,7 @@ setup(
       'Programming Language :: Python :: 3 :: Only',
       'Topic :: Multimedia :: Graphics',
       'Topic :: Utilities'
-     ]
+     ],
     long_description = long_descr,
     install_requires=reqs,
     author = "Luke Duncan",
