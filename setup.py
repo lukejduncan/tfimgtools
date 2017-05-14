@@ -3,14 +3,12 @@
 import re
 from setuptools import setup
 
-# TODO replace with fileread
 version = "0.0.1"
 reqs = ['tensorflow']
 
 with open("README.md", "rb") as f:
     long_descr = f.read().decode("utf-8")
 
-# TODO consider a more generic name.
 # TODO replace url
 # TODO pick a reasonable license
 setup(
