@@ -3,6 +3,7 @@
 import os
 import sys
 import argparse
+import logging
 import numpy as np
 import tensorflow as tf
 import ntpath
@@ -13,6 +14,8 @@ from .tfutil import *
 __version__ = '0.0.1'
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.CRITICAL)
 
 ERROR_DIR = 'error'
 
@@ -96,7 +99,7 @@ def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, ou
     except:
       error_path = os.path.join(output_dir, ERROR_DIR)
       mv(img, error_path)
-      print("There was a problem classifying %s.  It has been moved to the directory %s" % (img, error_path))
+      logger.error("There was a problem classifying %s.  It has been moved to the directory %s" % (img, error_path))
       continue
 
     if csv:
@@ -120,6 +123,7 @@ def main():
   parser.add_argument("--singleclass", help="This is the default Sorting Scheme. Performs binary classification on the images as the specified class. The results are tiered into folders based on confidence of result. You must choose multiclass or singleclass but not both.", type=str)
   parser.add_argument("--multiclass", help="Performs multiclass classification, sorting the input directory into the most likely class. You must choose multiclass or singleclass but not both.", action='store_true')
   parser.add_argument("--output-dir", help="The directory to output single or multiclass sorting. Defaults to 'classifications'", type=str)
+  parser.add_argument("--verbose", help="Enables verbose logging.", action='store_true')
 
   args = parser.parse_args()
 
@@ -130,5 +134,8 @@ def main():
   if args.singleclass and args.multiclass:
     print("Please use singleclass or multiclass, but not both.  See --help for details on available options.")
     sys.exit(1)
+
+  if args.verbose:
+    logger.setLevel(logging.DEBUG)
 
   run(args.unsorted, args.csv, args.singleclass, args.multiclass, model_file, labels_file, output_dir)
