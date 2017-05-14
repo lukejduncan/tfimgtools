@@ -41,8 +41,7 @@ def sort_multiclass(img, predictions, labels, directory):
   animal_dir = os.path.join(directory, animal)
   mv(img, animal_dir)
 
-## TODO decide these based on PR Curve, make configurable
-def sort_singleclass(img, predictions, target, labels, directory):
+def sort_singleclass(img, predictions, target, labels, confidence_thresh, directory):
   """Sort an image based on the confidence that the image matches target classification.
 
   Parameters
@@ -56,11 +55,12 @@ def sort_singleclass(img, predictions, target, labels, directory):
     The target classification, corresponding to a value in labels
   labels: list
     A list of the classes considered, where indices correspond to predictions
+  confidence_thresh: list
+    A list of thresholds for us in sorting.
   directory: str
     The parent directory to sort the image into
   """
   global confidence_dirs
-  global confidence_intervals
 
   idx = labels.index(target)
   prob = predictions[idx]
@@ -68,12 +68,12 @@ def sort_singleclass(img, predictions, target, labels, directory):
   expanded_dirs = [os.path.join(directory, d) for d in confidence_dirs]
 
   ## Assumes decreasing order
-  for i in range(len(confidence_intervals)):
-    if prob > confidence_intervals[i]:
+  for i in range(len(confidence_thresh)):
+    if prob > confidence_thresh[i]:
       mv(img, expanded_dirs[i])
       break
 
-def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, output_dir):
+def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, confidence_thresh, output_dir):
   """Run classification and sorting."""
   create_graph(model_file)
   imgs = ls(unsorted_imgs)
@@ -104,7 +104,7 @@ def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, ou
       write_csv_line(csv_file, predictions)
 
     if singleclass:
-      sort_singleclass(img, predictions, singleclass, labels, output_dir)
+      sort_singleclass(img, predictions, singleclass, labels, confidence_thresh, output_dir)
     elif multiclass:
       sort_multiclass(img, predictions, labels, output_dir)
 
@@ -113,10 +113,12 @@ def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, ou
 
 def main():
   """A command line driver for running sorting and classification."""
+  global confidence_intervals
   parser = argparse.ArgumentParser(description='Classifies images using a tensorflow based classifier')
 
   parser.add_argument("unsorted", type=str)
   parser.add_argument("--model-dir", help="The directory that contains the model you want to use.  Defaults to `model`", type=str)
+  parser.add_argument("--confidence-thresholds", help="A comma seperated list of thresholds for use with singleclass classifications.  Defaults to '0.9,0.7,0.5'", type=str)
   parser.add_argument("--csv", help="When classifying the images writes the results to a given csv file", type=str)
   parser.add_argument("--singleclass", help="This is the default Sorting Scheme. Performs binary classification on the images as the specified class. The results are tiered into folders based on confidence of result. You must choose multiclass or singleclass but not both.", type=str)
   parser.add_argument("--multiclass", help="Performs multiclass classification, sorting the input directory into the most likely class. You must choose multiclass or singleclass but not both.", action='store_true')
@@ -136,4 +138,9 @@ def main():
   if args.verbose:
     logger.setLevel(logging.DEBUG)
 
-  run(args.unsorted, args.csv, args.singleclass, args.multiclass, model_file, labels_file, output_dir)
+  if args.confidence_thresholds:
+    confidence_thresh = list(map(float, args.confidence_thresholds.split(',')))
+  else:
+    confidence_thresh = confidence_intervals
+
+  run(args.unsorted, args.csv, args.singleclass, args.multiclass, model_file, labels_file, confidence_thresh, output_dir)

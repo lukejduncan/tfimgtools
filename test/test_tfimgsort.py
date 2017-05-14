@@ -44,9 +44,10 @@ class TestTfimgsort(unittest.TestCase):
     multiclass = False
     model_file = os.path.join(RESOURCE_MODEL_DIR, 'output_graph.pb')
     labels_file = os.path.join(RESOURCE_MODEL_DIR, 'output_labels.txt')
+    confidence_thresh = [0.9, 0.7, 0.5, 0.0]
 
     original_imgs = ls(self.input_dir)
-    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, self.output_dir)
+    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, confidence_thresh, self.output_dir)
 
     sorted_files = 0
     for label in ['high confidence', 'confident', 'low confidence', 'negative']:
@@ -65,9 +66,10 @@ class TestTfimgsort(unittest.TestCase):
     multiclass = False
     model_file = os.path.join(RESOURCE_MODEL_DIR, 'output_graph.pb')
     labels_file = os.path.join(RESOURCE_MODEL_DIR, 'output_labels.txt')
+    confidence_thresh = None
 
     original_imgs = ls(self.input_dir)
-    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, self.output_dir)
+    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, confidence_thresh, self.output_dir)
 
     sorted_files = 0
     for label in ['error']:
@@ -86,9 +88,10 @@ class TestTfimgsort(unittest.TestCase):
     multiclass = True
     model_file = os.path.join(RESOURCE_MODEL_DIR, 'output_graph.pb')
     labels_file = os.path.join(RESOURCE_MODEL_DIR, 'output_labels.txt')
+    confidence_thresh = None
 
     original_imgs = ls(self.input_dir)
-    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, self.output_dir)
+    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, confidence_thresh, self.output_dir)
 
     sorted_files = 0
     for label in ['elephant']:
@@ -107,9 +110,10 @@ class TestTfimgsort(unittest.TestCase):
     multiclass = False
     model_file = os.path.join(RESOURCE_MODEL_DIR, 'output_graph.pb')
     labels_file = os.path.join(RESOURCE_MODEL_DIR, 'output_labels.txt')
+    confidence_thresh = None
 
     original_imgs = ls(self.input_dir)
-    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, self.output_dir)
+    run(self.input_dir, csv, singleclass, multiclass, model_file, labels_file, confidence_thresh, self.output_dir)
 
     self.assertTrue(os.path.isfile(csv))
 
