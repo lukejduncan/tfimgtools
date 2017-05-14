@@ -19,6 +19,7 @@ setup(
         },
     version = version,
     description = "A tool for sorting images given a tensorflow model.",
+    long_description = long_descr,
     classifiers = [
       'License :: OSI Approved :: MIT License',
       'Development Status :: 1 - Planning',
@@ -30,9 +31,10 @@ setup(
       'Topic :: Multimedia :: Graphics',
       'Topic :: Utilities'
      ],
-    long_description = long_descr,
+    keyword = 'computer-vision tensorflow cli',
+    license = 'MIT',
     install_requires=reqs,
     author = "Luke Duncan",
-    author_email = "lduncan@gmail.com",
+    author_email = "lukejduncan@gmail.com",
     url = "https://github.com/lukejduncan/tfimgtools",
     )
