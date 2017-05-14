@@ -20,6 +20,7 @@ setup(
     version = version,
     description = "A tool for sorting images given a tensorflow model.",
     classifiers = [
+      'License :: OSI Approved :: MIT License',
       'Development Status :: 1 - Planning',
       'Environment :: Console',
       'Intended Audience :: Developers',
