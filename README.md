@@ -23,6 +23,8 @@ vagrant ssh
 
 ```shell
 pip3 install tfimgtools
+
+tfimgsort --help
 ```
 
 ## venv
