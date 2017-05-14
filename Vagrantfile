@@ -70,10 +70,10 @@ Vagrant.configure(2) do |config|
    config.vm.provision "shell", inline: <<-SHELL
      sudo apt-get update
      sudo apt-get install -y python3-pip python3-tk
-    
+
      pip3 install --upgrade pip
      sudo pip3 install tensorflow jupyter matplotlib sklearn scipy pillow
 
-     alias startjupyter="jupyter notebook --notebook-dir=/vagrant/notebook --no-browser --ip=0.0.0.0" 
+     alias startjupyter="jupyter notebook --notebook-dir=/vagrant/notebook --no-browser --ip=0.0.0.0"
    SHELL
 end
