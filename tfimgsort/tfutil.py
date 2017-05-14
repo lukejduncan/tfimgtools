@@ -1,3 +1,5 @@
+"""Utilities for creating and using a tensorflow image classifier."""
+
 import os
 import sys
 import numpy as np
@@ -8,6 +10,7 @@ from functools import reduce
 graph_created = False
 
 def create_graph(file):
+  """Given the path to a tensorflow model loads it as the default graph."""
   global graph_created
   if graph_created:
     return
@@ -19,6 +22,11 @@ def create_graph(file):
       _ = tf.import_graph_def(graph_def, name='')
 
 def classify(img):
+  """Given a path to a jpg image classifies it using the preloaded model.
+
+  Note: this assumes a default graph has already been instantiated using the
+  :func:`create_graph`.
+  """
   answer = None
 
   if not tf.gfile.Exists(img):
