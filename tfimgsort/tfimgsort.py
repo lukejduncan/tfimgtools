@@ -11,8 +11,6 @@ from functools import reduce
 from .util import *
 from .tfutil import *
 
-__version__ = '0.0.1'
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.CRITICAL)
