@@ -91,7 +91,17 @@ def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, co
   if multiclass:
     setup_dirs(labels + [ERROR_DIR], output_dir)
 
+
+  i = 0.0
   for img in imgs:
+    logger.debug("Classifying %s" % (img))
+
+    i += 1
+    percent = i / len(imgs)
+    percent *= 100
+    sys.stdout.write('\r>> Processing images.  %d%% complete' % (int(percent)))
+    sys.stdout.flush()
+
     try:
       predictions = classify(img)
     except:
@@ -110,6 +120,9 @@ def run(unsorted_imgs, csv, singleclass, multiclass, model_file, labels_file, co
 
   if csv:
     csv_file.close()
+
+  sys.stdout.write("\r\n")
+  sys.stdout.flush()
 
 def main():
   """A command line driver for running sorting and classification."""
