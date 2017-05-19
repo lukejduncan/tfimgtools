@@ -87,7 +87,8 @@ def run(unsorted_imgs,
         model_file,
         labels_file,
         confidence_thresh,
-        output_dir):
+        output_dir,
+        is_cli=False):
     """Run classification and sorting."""
     create_graph(model_file)
     imgs = ls(unsorted_imgs)
@@ -112,9 +113,11 @@ def run(unsorted_imgs,
         i += 1
         percent = i / len(imgs)
         percent *= 100
-        sys.stdout.write(
-            '\r>> Processing images.  %d%% complete' % (int(percent)))
-        sys.stdout.flush()
+
+        if is_cli:
+            sys.stdout.write(
+                '\r>> Processing images.  %d%% complete' % (int(percent)))
+            sys.stdout.flush()
 
         try:
             predictions = classify(img)
@@ -204,4 +207,4 @@ def main():
         confidence_thresh = confidence_intervals
 
     run(args.unsorted, args.csv, args.singleclass, args.multiclass,
-        model_file, labels_file, confidence_thresh, output_dir)
+        model_file, labels_file, confidence_thresh, output_dir, is_cli=True)

@@ -1,21 +1,23 @@
 """setup tools control"""
 
-import re
 from setuptools import setup
 
 version = "0.0.7"
 reqs = ['tensorflow']
 
+
 setup(
-    name = "tfimgtools",
-    packages = ["tfimgsort"],
-    entry_points = {
+    name="tfimgtools",
+    packages=['tfimgsort', 'test'],
+    setup_requires=['flake8'],
+    test_suite='test',
+    entry_points={
         "console_scripts": ['tfimgsort = tfimgsort.tfimgsort:main']
         },
-    version = version,
-    description = "A tool for sorting images given a tensorflow model.",
-    long_description = "A tool for sorting images given a tensorflow model.",
-    classifiers = [
+    version=version,
+    description="A tool for sorting images given a tensorflow model.",
+    long_description="A tool for sorting images given a tensorflow model.",
+    classifiers=[
       'License :: OSI Approved :: MIT License',
       'Development Status :: 1 - Planning',
       'Environment :: Console',
@@ -26,10 +28,10 @@ setup(
       'Topic :: Multimedia :: Graphics',
       'Topic :: Utilities'
      ],
-    keyword = 'computer-vision tensorflow cli',
-    license = 'MIT',
+    keyword='computer-vision tensorflow cli',
+    license='MIT',
     install_requires=reqs,
-    author = "Luke Duncan",
-    author_email = "lukejduncan@gmail.com",
-    url = "https://github.com/lukejduncan/tfimgtools",
+    author="Luke Duncan",
+    author_email="lukejduncan@gmail.com",
+    url='https://github.com/lukejduncan/tfimgtools',
     )
