@@ -2,7 +2,7 @@
 
 tfimgtools is a set of CLI tools for using and evaluating image classifier models built using TensorFlow.
 
-If you want to contribute, be sure to check out the (project wiki)[https://github.com/lukejduncan/tfimgtools/wiki]
+If you want to contribute, be sure to check out the [project wiki](https://github.com/lukejduncan/tfimgtools/wiki)
 
 # Installation
 
